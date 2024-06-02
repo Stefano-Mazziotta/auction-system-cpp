@@ -1,9 +1,9 @@
 #include "subasta.h"
 
-Person::Person(string n)
+Person::Person(string name)
 {
 
-    name = n;
+    this->name = name;
 }
 
 Person::~Person(){};
@@ -11,21 +11,21 @@ Person::~Person(){};
 string Person::getName()
 {
 
-    return name;
+    return this->name;
 }
 
-ostream &operator<<(ostream &o, const Person &p)
+ostream &operator<<(ostream &output, const Person &person)
 {
 
-    o << "Person's name: " << p.name;
-    return o;
+    output << "Person's name: " << person.name;
+    return output;
 }
 
-Bid::Bid(Person *p, long v)
+Bid::Bid(Person *person, long amount)
 {
 
-    bidder = p;
-    value = v;
+    this->bidder = person;
+    this->amount = amount;
 }
 
 Bid::~Bid()
@@ -33,43 +33,43 @@ Bid::~Bid()
     delete (bidder);
 }
 
-long Bid::getValue()
+long Bid::getAmount()
 {
 
-    return value;
+    return this->amount;
 }
 
 Person *Bid::getBidder()
 {
 
-    return bidder;
+    return this->bidder;
 }
 
-ostream &operator<<(ostream &o, const Bid &bid)
+ostream &operator<<(ostream &output, const Bid &bid)
 {
 
-    o << "Oferta: " << *(bid.bidder) << " - Valor de oferta: " << bid.value
-      << endl;
-    return o;
+    output << "Oferta: " << *(bid.bidder) << " - Valor de oferta: " << bid.amount
+           << endl;
+    return output;
 }
 
-Lot::Lot(int n, string d)
+Lot::Lot(int lotId, string description)
 {
 
-    highestBid = NULL;
-    numero = n;
-    descripcion = d;
+    this->highestBid = NULL;
+    this->lotId = lotId;
+    this->description = description;
 }
 
 Lot::~Lot()
 {
-    delete (highestBid);
+    delete (this->highestBid);
 }
 
 bool Lot::bidFor(Bid *bid)
 {
 
-    if ((highestBid == NULL) || (bid->getValue() > highestBid->getValue()))
+    if ((highestBid == NULL) || (bid->getAmount() > highestBid->getAmount()))
     {
         // This bid is the best so far.
         highestBid = bid;
@@ -82,30 +82,30 @@ bool Lot::bidFor(Bid *bid)
     }
 }
 
-string Lot::getDescripcion()
+string Lot::getDescription()
 {
 
-    return descripcion;
+    return this->description;
 }
 
-int Lot::getNumero()
+int Lot::getLotId()
 {
 
-    return numero;
+    return this->lotId;
 }
 
 Bid *Lot::getHighestBid()
 {
 
-    return highestBid;
+    return this->highestBid;
 }
 
-ostream &operator<<(ostream &o, const Lot &lot)
+ostream &operator<<(ostream &output, const Lot &lot)
 {
 
-    o << "Lote " << lot.descripcion << ": " << "\n \t Numero: " << lot.numero
-      << "\n \t Oferta: " << lot.highestBid << endl;
-    return o;
+    output << "Lote " << lot.description << ": " << "\n \t Numero: " << lot.lotId
+           << "\n \t Oferta: " << lot.highestBid << endl;
+    return output;
 }
 
 Auction::Auction()
@@ -147,7 +147,7 @@ Lot *Auction::getLot(int lotNumber)
         Lot *selectedLot = lots[lotNumber - 1];
         // Include a confidence check to be sure we have the
         // right lot.
-        if (selectedLot->getNumero() != lotNumber)
+        if (selectedLot->getLotId() != lotNumber)
         {
             cout << "Error interno: el lote retornado no corresponde al"
                  << " numero " << lotNumber << endl;
@@ -161,21 +161,21 @@ Lot *Auction::getLot(int lotNumber)
     }
 }
 
-void Auction::bidFor(int n, Person *p, long v)
+void Auction::doOffer(int lotId, Person *person, long amount)
 {
 
-    Lot *selectedLot = getLot(n);
+    Lot *selectedLot = getLot(lotId);
     if (selectedLot != NULL)
     {
-        if (selectedLot->bidFor(new Bid(p, v)))
+        if (selectedLot->bidFor(new Bid(person, amount)))
         {
-            cout << "La oferta al lote numero " << n << " fue exitosa.\n";
+            cout << "La oferta al lote numero " << lotId << " fue exitosa.\n";
             cout << *(selectedLot->getHighestBid());
         }
         else
         {
-            cout << "El lote numero: " << n << " ya tiene una oferta mayor: "
-                 << selectedLot->getHighestBid()->getValue() << endl;
+            cout << "El lote numero: " << lotId << " ya tiene una oferta mayor: "
+                 << selectedLot->getHighestBid()->getAmount() << endl;
         }
     }
 }
@@ -192,13 +192,13 @@ int main()
     auction->insertLot("impresora");
     auction->showLots();
 
-    auction->bidFor(1, pablo, 8000);
-    auction->bidFor(3, maria, 3000);
-    auction->bidFor(1, jorge, 5000);
+    auction->doOffer(1, pablo, 8000);
+    auction->doOffer(3, maria, 3000);
+    auction->doOffer(1, jorge, 5000);
 
     auction->showLots();
 
-    auction->bidFor(2, maria, 3000);
+    auction->doOffer(2, maria, 3000);
 
     auction->showLots();
 

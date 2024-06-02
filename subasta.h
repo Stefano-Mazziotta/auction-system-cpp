@@ -29,14 +29,14 @@ class Bid
 {
 
 private:
-    long value;
+    long amount;
     Person *bidder;
 
 public:
     Bid(Person *, long);
     ~Bid();
 
-    long getValue();
+    long getAmount();
     Person *getBidder();
 
     friend ostream &operator<<(ostream &, const Bid &);
@@ -46,8 +46,8 @@ class Lot
 {
 
 private:
-    string descripcion;
-    int numero;
+    string description;
+    int lotId;
     Bid *highestBid;
 
 public:
@@ -56,8 +56,8 @@ public:
     ~Lot();
 
     bool bidFor(Bid *);
-    string getDescripcion();
-    int getNumero();
+    string getDescription();
+    int getLotId();
     Bid *getHighestBid();
 
     friend ostream &operator<<(ostream &, const Lot &);
@@ -83,6 +83,6 @@ public:
 
     void insertLot(string);
     void showLots();
-    void bidFor(int, Person *, long);
+    void doOffer(int lotId, Person *person, long amount);
     Lot *getLot(int);
 };
