@@ -1,4 +1,4 @@
-#include "subasta.h"
+#include "auction-system.h"
 
 Person::Person(string name)
 {
@@ -17,7 +17,7 @@ string Person::getName()
 ostream &operator<<(ostream &output, const Person &person)
 {
 
-    output << "Person's name: " << person.name;
+    output << person.name;
     return output;
 }
 
@@ -73,7 +73,6 @@ bool Lot::bidFor(Bid *bid)
     {
         // This bid is the best so far.
         highestBid = bid;
-        // cout << *(mayorOferta);
         return true;
     }
     else
@@ -103,8 +102,14 @@ Bid *Lot::getHighestBid()
 ostream &operator<<(ostream &output, const Lot &lot)
 {
 
+    int highestBidAmount = 0;
+    if (lot.highestBid)
+    {
+        highestBidAmount = lot.highestBid->getAmount();
+    }
+
     output << "Lote " << lot.description << ": " << "\n \t Numero: " << lot.lotId
-           << "\n \t Oferta: " << lot.highestBid << endl;
+           << "\n \t Oferta: " << highestBidAmount << endl;
     return output;
 }
 
@@ -144,15 +149,14 @@ Lot *Auction::getLot(int lotNumber)
     if ((lotNumber >= 1) && (lotNumber < nextLot))
     {
         // The number seems to be reasonable.
-        Lot *selectedLot = lots[lotNumber - 1];
-        // Include a confidence check to be sure we have the
-        // right lot.
-        if (selectedLot->getLotId() != lotNumber)
+        Lot *lot = lots[lotNumber - 1];
+
+        // Include a confidence check to be sure we have the right lot.
+        if (lot->getLotId() != lotNumber)
         {
-            cout << "Error interno: el lote retornado no corresponde al"
-                 << " numero " << lotNumber << endl;
+            cout << "Error interno: el lote retornado no corresponde al" << " numero " << lotNumber << endl;
         }
-        return selectedLot;
+        return lot;
     }
     else
     {

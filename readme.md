@@ -34,10 +34,7 @@ To use the Auction System, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/your-username/auction-system.git`
 
-2. Install the required dependencies: `npm install`
-
-3. Run the application: `npm start`
-
+2. g++ output auction-system.cpp
 ## Contributing
 
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
