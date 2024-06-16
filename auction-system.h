@@ -7,6 +7,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <memory>
 
 using namespace std;
 
@@ -85,4 +87,7 @@ public:
     void showLots();
     void doOffer(int lotId, Person *person, long amount);
     Lot *getLot(int);
+    void loadLotsFromFile(const string &filename);
+    void saveLotsToFile(const string &filename);
+    void saveBidsToFile(const string &filename);
 };

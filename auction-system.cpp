@@ -10,7 +10,6 @@ Person::~Person(){};
 
 string Person::getName()
 {
-
     return this->name;
 }
 
@@ -73,6 +72,12 @@ bool Lot::bidFor(Bid *bid)
     {
         // This bid is the best so far.
         highestBid = bid;
+
+        //  store in file about this fact
+        // search if the lot exists in file
+        // yes - replace highest bid
+        //  no - add the lot to file
+
         return true;
     }
     else
@@ -116,6 +121,10 @@ ostream &operator<<(ostream &output, const Lot &lot)
 Auction::Auction()
 {
     nextLot = 1;
+
+    // create file .txt to save auction data
+    // auction-timestamp.txt
+    // lot.id - lot.description - highestBid.name - highestBid.amount
 }
 
 Auction::~Auction()
@@ -136,7 +145,6 @@ void Auction::insertLot(string descripcion)
 
 void Auction::showLots()
 {
-
     vector<Lot *>::const_iterator it;
     for (it = lots.begin(); it != lots.end(); ++it)
     {
@@ -184,29 +192,90 @@ void Auction::doOffer(int lotId, Person *person, long amount)
     }
 }
 
+void Auction::loadLotsFromFile(const string &filename)
+{
+    ifstream infile(filename);
+    if (!infile)
+    {
+        cerr << "Could not open file " << filename << " for reading.\n";
+        return;
+    }
+
+    string line;
+    while (getline(infile, line))
+    {
+        int id;
+        // istringstream iss(line);
+        if (line.length() > 0)
+        {
+            string lot = line.substr(2, line.length());
+            insertLot(lot);
+        }
+    }
+    infile.close();
+}
+
+void Auction::saveLotsToFile(const string &filename)
+{
+    ofstream outfile(filename);
+    if (!outfile)
+    {
+        cerr << "Could not open file " << filename << " for writing.\n";
+        return;
+    }
+
+    for (const auto &lot : lots)
+    {
+        if (lot->getHighestBid() == nullptr)
+        {
+            outfile << lot->getLotId() << " " << lot->getDescription() << endl;
+        }
+    }
+    outfile.close();
+}
+
+void Auction::saveBidsToFile(const string &filename)
+{
+    ofstream outfile(filename);
+    if (!outfile)
+    {
+        cerr << "Could not open file " << filename << " for writing.\n";
+        return;
+    }
+
+    for (const auto &lot : lots)
+    {
+        if (lot->getHighestBid() != nullptr)
+        {
+            outfile << lot->getLotId() << " " << lot->getDescription() << " "
+                    << lot->getHighestBid()->getBidder()->getName() << " "
+                    << lot->getHighestBid()->getAmount() << endl;
+        }
+    }
+    outfile.close();
+}
+
 int main()
 {
-
     Person *pablo = new Person("Pablo");
     Person *jorge = new Person("Jorge");
     Person *maria = new Person("Maria");
 
     Auction *auction = new Auction();
-    auction->insertLot("computadora");
-    auction->insertLot("impresora");
+
+    auction->loadLotsFromFile("lots.txt");
     auction->showLots();
 
     auction->doOffer(1, pablo, 8000);
-    auction->doOffer(3, maria, 3000);
     auction->doOffer(1, jorge, 5000);
+    auction->doOffer(2, maria, 5000);
 
-    auction->showLots();
+    auction->saveLotsToFile("lots.txt");
+    auction->saveBidsToFile("auctions.txt");
 
-    auction->doOffer(2, maria, 3000);
-
-    auction->showLots();
-
-    delete (auction);
+    delete (pablo);
+    delete (jorge);
+    delete (maria);
 
     return 0;
 }
