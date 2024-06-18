@@ -72,12 +72,6 @@ bool Lot::bidFor(Bid *bid)
     {
         // This bid is the best so far.
         highestBid = bid;
-
-        //  store in file about this fact
-        // search if the lot exists in file
-        // yes - replace highest bid
-        //  no - add the lot to file
-
         return true;
     }
     else
@@ -121,10 +115,6 @@ ostream &operator<<(ostream &output, const Lot &lot)
 Auction::Auction()
 {
     nextLot = 1;
-
-    // create file .txt to save auction data
-    // auction-timestamp.txt
-    // lot.id - lot.description - highestBid.name - highestBid.amount
 }
 
 Auction::~Auction()
@@ -205,11 +195,12 @@ void Auction::loadLotsFromFile(const string &filename)
     while (getline(infile, line))
     {
         int id;
-        // istringstream iss(line);
         if (line.length() > 0)
         {
-            string lot = line.substr(2, line.length());
-            insertLot(lot);
+            size_t spaceIndex = line.find(' ');
+            string lotDescription = line.substr(spaceIndex + 1);
+
+            insertLot(lotDescription);
         }
     }
     infile.close();

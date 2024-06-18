@@ -1,9 +1,3 @@
-
-/// Ejemplo de una subasta simple.
-/** La Subasta puede poseer Lotes de articulos a subastar, cada uno de ellos
- *  recibe ofertas hechas por personas de las cuales solo se registra la mayor.
- */
-
 #include <iostream>
 #include <string>
 #include <vector>
