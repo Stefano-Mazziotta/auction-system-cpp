@@ -54,7 +54,6 @@ private:
 
 public:
     Lot(int, string);
-
     ~Lot();
 
     bool bidFor(Bid *);

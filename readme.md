@@ -14,7 +14,7 @@ The Auction System is a software application that facilitates the buying and sel
 
 The class diagram represents the structure and relationships between the classes in the Auction System. It provides a visual representation of the system's design.
 
-![Class Diagram](/path/to/class-diagram.png)
+![Class Diagram](./UML_classes.png)
 
 ## Implementation
 
@@ -33,8 +33,8 @@ The Auction System is implemented using object-oriented programming principles. 
 To use the Auction System, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/your-username/auction-system.git`
-
 2. g++ output auction-system.cpp
+
 ## Contributing
 
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
